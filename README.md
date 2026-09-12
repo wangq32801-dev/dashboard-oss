@@ -28,6 +28,7 @@
 - **健康**：Apple Watch 数据可选接入，睡眠/HRV/锻炼趋势 + 每日简报
 - **复盘**：周完成曲线、角色平衡雷达、AI 辅助草稿
 - **AI 管家**：读得见你全部数据的本地管家——动作白名单 + 人工确认 + 可撤销，绝无静默执行
+- **观星模式**：从今日页进入沉浸星空，点击点亮星星，轮播仓库原创的每日提醒；支持 Esc 或返回按钮退出
 
 设计受原则中心、角色平衡与重要性排序等经典自我管理思想启发（详见致谢）。**本项目与任何书籍、作者或机构无关，非官方产品。**
 
@@ -55,10 +56,10 @@ DASH_DEMO=1 python3 dashboard-server.py 8787   # 强制演示：独立临时数�
 DASH_DEMO=0 python3 dashboard-server.py 8787   # 强制真实模式
 ```
 
-**重置演示数据**：所有数据落在 `data/` 目录（可用 `DASH_DATA_DIR` 改位置），删除即重来：
+**重置非强制演示数据**：先停止服务，再将 `data/` 移到备份位置；下次启动会重新初始化。`DASH_DEMO=1` 使用独立临时目录，退出后自动清理。
 
 ```bash
-rm -rf data/   # 或者换个 DASH_DATA_DIR
+mv data "data.backup.$(date +%Y%m%d-%H%M%S)"   # 或者换个 DASH_DATA_DIR
 ```
 
 ## 可选集成（全部按需，不配不影响运行）
@@ -67,9 +68,9 @@ rm -rf data/   # 或者换个 DASH_DATA_DIR
 |---|---|---|
 | 任务/习惯真实数据 | `TICKTICK_TOKEN` + `PROJECT_IDS` | 演示数据 |
 | AI 管家/顾问/神谕 | `LLM_API_BASE` / `LLM_API_KEY` / `LLM_MODEL`（可选 `LLM_FALLBACK`） | 规则模式兜底，界面完整 |
-| 看图理解 | `VISION_API_BASE` / `VISION_API_KEY` / `VISION_MODEL` | 图片按钮隐藏 |
+| 看图理解 | 与 AI 功能共用 `LLM_API_BASE` / `LLM_API_KEY` | 本机拒绝上传并提示未配置 |
 | 微信推送提醒 | `WECHAT_DELIVER` | 提醒仅本地记录 |
-| 健康数据 | HAE app 推送到 `health_ingest.py`（:8786） | 健康页显示演示趋势 |
+| 健康数据 | 将 `DASH_DATA_DIR` 指向兼容的健康数据目录；本仓库不附带推送接收器 | 健康页显示演示趋势 |
 | 界面称呼 | `USER_NAME` | 「用户」 |
 
 配置文件查找顺序：`DASH_CONFIG` 环境变量 → 项目目录 `./config`。不会自动读取主目录配置；`DASH_DEMO=1` 不读取配置文件。远端画像同步默认关闭，仅显式设置 `DASH_PROFILE_SYNC=1` 且非演示模式时启用。示例见 `deploy/.env.example`。
@@ -82,7 +83,7 @@ rm -rf data/   # 或者换个 DASH_DATA_DIR
 Python 单进程后端（dashboard-server.py，标准库实现）
    ├─ TickTick MCP API     ── 任务/习惯（可选）
    ├─ 本地 Markdown/JSON   ── 角色/关系/倾听/影响圈（data/ 目录）
-   ├─ health_ingest :8786  ── Apple Watch 数据接收（可选）
+   ├─ 健康数据目录          ── Apple Watch 数据读取与诊断（接收器需自行实现）
    └─ 你自己的 LLM 服务    ── 管家/顾问/神谕（可选，OpenAI 兼容协议）
 ```
 

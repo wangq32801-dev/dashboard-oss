@@ -259,6 +259,40 @@ try {
       await ctx.close();
     }
   }
+
+  // ── 场景 5：观星模式从可见入口进入，显示原创提醒，并能退出 ──
+  {
+    const ctx = await makeCtx();
+    const page = await newPage(ctx);
+    const errors = [];
+    page.on('pageerror', e => errors.push('PAGE: ' + e.message));
+    page.on('console', m => { if (m.type() === 'error') errors.push('CONSOLE: ' + m.text()); });
+    try {
+      await boot(page);
+      await page.click('#stargaze-entry');
+      await page.waitForFunction(() => document.body.classList.contains('stargazing'), {timeout: 3000});
+      await page.waitForFunction(() => {
+        const el = document.getElementById('sg-oracle');
+        return el?.classList.contains('show') && (el.textContent || '').includes('今日提醒');
+      }, {timeout: 5000});
+      const entered = await page.evaluate(() => ({
+        active: document.body.classList.contains('stargazing'),
+        canvas: getComputedStyle(document.getElementById('sky-canvas')).display !== 'none',
+        quote: (document.getElementById('sg-oracle')?.textContent || '').trim(),
+        exitVisible: getComputedStyle(document.getElementById('sg-exit')).visibility === 'visible',
+      }));
+      check('stargaze: visible entry opens sky and original prompt',
+        entered.active && entered.canvas && entered.exitVisible && entered.quote.includes('今日提醒'), JSON.stringify(entered).slice(0, 180));
+      await page.keyboard.press('Escape');
+      await page.waitForFunction(() => !document.body.classList.contains('stargazing'), {timeout: 3000});
+      check('stargaze: Escape returns to dashboard', true);
+    } catch (e) {
+      check('stargaze: scenario', false, e?.stack || String(e));
+    } finally {
+      check('stargaze: no console/page errors', errors.length === 0, errors.slice(0, 4).join(' | '));
+      await ctx.close();
+    }
+  }
 } finally {
   await browser.close();
 }
