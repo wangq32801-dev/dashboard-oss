@@ -1,0 +1,12 @@
+[Unit]
+Description=个人驾驶舱 · 生成每周复盘草稿
+After=app.service
+Requires=app.service
+
+[Service]
+Type=oneshot
+User=dashboard
+Group=dashboard
+UMask=0077
+WorkingDirectory=/opt/hermes-dashboard
+ExecStart=/opt/hermes-dashboard/deploy/run-weekly-draft.sh

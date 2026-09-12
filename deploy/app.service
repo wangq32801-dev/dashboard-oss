@@ -1,0 +1,25 @@
+[Unit]
+Description=个人驾驶舱 · 人生管理系统
+After=network.target
+
+[Service]
+Type=simple
+User=dashboard
+Group=dashboard
+UMask=0077
+WorkingDirectory=/opt/hermes-dashboard
+ExecStart=/usr/bin/python3 /opt/hermes-dashboard/dashboard-server.py
+Restart=on-failure
+RestartSec=5
+Environment="PORT=8787"
+EnvironmentFile=-/opt/hermes-dashboard/.env
+
+# 安全加固
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/opt/hermes-dashboard/data
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

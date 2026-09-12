@@ -1,0 +1,11 @@
+[Unit]
+Description=个人驾驶舱 · 每周日 20:00 复盘草稿（错过后补跑）
+
+[Timer]
+OnCalendar=Sun *-*-* 20:00:00
+Persistent=true
+RandomizedDelaySec=60
+Unit=dashboard-weekly-draft.service
+
+[Install]
+WantedBy=timers.target

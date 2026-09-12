@@ -1,0 +1,74 @@
+# ── 凭据与本地配置（绝不入库）──
+.dash_config
+**/.dash_config
+config
+dash_config
+.env.*
+*.pem
+*.key
+*.p12
+certs/
+.env
+*.env
+!deploy/.env.example
+
+# ── 运行时数据（演示/用户数据不入库）──
+data/
+var/
+*.log
+*.log.*
+*.jsonl
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+
+# ── 损坏备份（画像自愈产生的 .corrupt-时间戳 文件）──
+*.corrupt-*
+
+# ── 私人健康原始数据 ──
+health-data/
+**/health-data/raw/
+
+# ── 用户状态（画像/AI 对话/任务缓存）──
+.dash_*.json
+user_profile.json
+butler_memory.json
+butler_history.json
+dash_config.json
+
+# ── 截图与临时目录 ──
+shots/
+tmp/
+*.tmp
+.cache/
+
+# ── 备份 ──
+*.bak
+*.bak-*
+backups/
+.deploy-backups/
+
+# ── 系统与编辑器 ──
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+.idea/
+.vscode/
+
+node_modules/
+package-lock.json
+
+# 本地验收证据（不入库）
+outputs/

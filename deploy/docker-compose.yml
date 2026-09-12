@@ -1,0 +1,44 @@
+services:
+  dashboard:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: hermes-dashboard
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${DASH_PORT:-8787}:8787"
+    volumes:
+      - ./data:/data                    # Obsidian 笔记 + JSON 持久化
+      - ./logs:/var/log/dashboard       # 日志
+    environment:
+      - TICKTICK_TOKEN=${TICKTICK_TOKEN:-}
+      - PROJECT_IDS=${PROJECT_IDS:-}
+      - LLM_API_BASE=${LLM_API_BASE:-}
+      - LLM_API_KEY=${LLM_API_KEY:-}
+      - LLM_MODEL=${LLM_MODEL:-}
+      - LLM_FALLBACK=${LLM_FALLBACK:-}
+      - USER_NAME=${USER_NAME:-}
+      - WECHAT_DELIVER=${WECHAT_DELIVER:-}
+      - DASH_ALLOWED_HOSTS=${DASH_ALLOWED_HOSTS:-}
+      - DASH_ALLOWED_ORIGINS=${DASH_ALLOWED_ORIGINS:-}
+      - DASH_ALLOW_REMOTE=1
+      - VPS_AUTH_USER=${VPS_AUTH_USER:-}
+      - VPS_AUTH_PASS=${VPS_AUTH_PASS:-}
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8787/api/chain-health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    container_name: hermes-nginx
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${NGINX_HTTP:-80}:80"
+      - "127.0.0.1:${NGINX_HTTPS:-443}:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certs:/etc/nginx/certs:ro          # SSL 证书（自签或 Let's Encrypt）
+    depends_on:
+      - dashboard

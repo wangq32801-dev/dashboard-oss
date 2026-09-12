@@ -1,0 +1,14 @@
+{
+  "name": "dashboard-oss-dev-deps",
+  "private": true,
+  "description": "开发/测试依赖声明（运行时零 npm 依赖；仅浏览器测试需要 playwright-core）",
+  "scripts": {
+    "test:py": "python3 -m unittest discover -s tests -p 'test_*.py'",
+    "test:modules": "node tests/task-mutations.test.mjs && node tests/view-lifecycle.test.mjs && node tests/today-view.test.mjs && node tests/write-coordinator.test.mjs",
+    "verify": "bash scripts/verify-release.sh"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.40.0"
+  },
+  "type": "module"
+}
