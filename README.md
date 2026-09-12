@@ -4,6 +4,16 @@
 
 [![status](https://img.shields.io/badge/status-v0.1%20early%20release-orange)]() [![python](https://img.shields.io/badge/python-3.9%2B-blue)]() [![deps](https://img.shields.io/badge/dependencies-0%20pip%20packages-green)]()
 
+## 30 秒启动
+
+```bash
+git clone https://github.com/wangq32801-dev/dashboard-oss.git
+cd dashboard-oss
+python3 dashboard-server.py 8787
+```
+
+然后打开 <http://127.0.0.1:8787/>。无需配置，首次启动会自动进入完全虚构的演示模式。
+
 ![今日页](docs/screenshots/today.png)
 
 ![角色页](docs/screenshots/roles.png)
@@ -34,11 +44,11 @@
 
 设计受原则中心、角色平衡与重要性排序等经典自我管理思想启发（详见致谢）。**本项目与任何书籍、作者或机构无关，非官方产品。**
 
-## 三步启动
+## 启动与演示模式
 
 ```bash
 # 1. 获取代码
-git clone <本仓库> && cd dashboard-oss
+git clone https://github.com/wangq32801-dev/dashboard-oss.git && cd dashboard-oss
 
 # 2. 启动（无需任何配置，自动进入演示模式）
 python3 dashboard-server.py 8787
