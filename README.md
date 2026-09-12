@@ -10,6 +10,8 @@
 
 ![AI 管家](docs/screenshots/butler.png)
 
+![观星模式](docs/screenshots/stargazing.png)
+
 ## 这是什么
 
 大多数待办工具回答「今天做什么」，却从不问你「**为什么做**」。这个项目把个人管理拆成一条闭环：
